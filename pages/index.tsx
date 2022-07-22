@@ -3,12 +3,63 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { useQuery, useMutation } from '../convex/_generated/react'
-import { useCallback } from 'react'
+import { useCallback, useState, useEffect } from 'react'
+
+const OpinionSelector = ({opinion, selectedOpinion}) => {
+  const listOpinions = useQuery('listOpinions') ?? [];
+  useEffect(() => {
+    if (!opinion && listOpinions.length > 0) {
+      selectedOpinion(listOpinions[0].opinion);
+    }
+  }, [opinion, listOpinions, selectedOpinion]);
+
+  return (
+    <div className={styles.description}>
+    {"Select an opinion:"} 
+    <select value={opinion ?? ""} onChange={(e) => selectedOpinion(e.target.value)}>
+    {listOpinions.map((opinion, i) => <option key={i} value={opinion.opinion}>{opinion.opinion}</option>)}
+    </select>
+    </div>
+    );
+};
+
+const OpinionCreator = ({createdOpinion}) => {
+  const createOpinion = useMutation('createOpinion');
+  const [opinion, setOpinion] = useState("");
+
+  return (
+    <div className={styles.description}>
+    {"Create a new opinion:"}
+    <input type="text" value={opinion} onChange={(e) => setOpinion(e.target.value)} />
+    <button onClick={() => {
+      createOpinion(opinion);
+      createdOpinion(opinion);
+    }}>Create</button>
+    </div>
+    );
+};
+
+const OpinionViewer = ({opinion}) => {
+  const opinionDoc = useQuery('getOpinion', opinion) ?? {};
+  const agree = useMutation('agreeWithOpinion');
+  const disagree = useMutation('disagreeWithOpinion');
+  if (!opinion) {
+    return null;
+  }
+  let fraction = opinionDoc.allVotes ? (opinionDoc.agree/opinionDoc.allVotes) : 0.5;
+  return (
+    <div>
+    <h2>{opinionDoc.opinion}</h2>
+    <center><p><button onClick={() => agree(opinion)}>Agree</button><button onClick={() => disagree(opinion)}>Disagree</button></p></center>
+    <div className="slidecontainer">
+    <input type="range" min="0" max="100" value={100 * fraction} className="slider" id="myRange" readOnly={true} />
+    </div>
+    </div>
+    );
+}
 
 const Home: NextPage = () => {
-  const counter = useQuery('getCounter', 'clicks') ?? 0
-  const increment = useMutation('incrementCounter')
-  const incrementByOne = useCallback(() => increment('clicks', 1), [increment])
+  const [opinion, setOpinion] = useState(null);
 
   return (
     <div className={styles.container}>
@@ -20,16 +71,12 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js</a> with{' '}
-          <a href="https://convex.dev">Convex</a>
+        {"Express your Opinions"}
         </h1>
 
-        <p className={styles.description}>
-          {"Here's the counter:"} {counter}
-        </p>
-        <button className={styles.button} onClick={incrementByOne}>
-          Add One!
-        </button>
+        <OpinionSelector opinion={opinion} selectedOpinion={setOpinion} />
+        <OpinionViewer opinion={opinion} />
+        <OpinionCreator createdOpinion={setOpinion} />
       </main>
 
       <footer className={styles.footer}>
