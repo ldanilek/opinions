@@ -5,25 +5,34 @@ import styles from '../styles/Home.module.css'
 import { useQuery, useMutation } from '../convex/_generated/react'
 import { useCallback, useState, useEffect } from 'react'
 
-const OpinionSelector = ({opinion, selectedOpinion}) => {
+interface SelectorProps {
+  opinion: string | null;
+  selectedOpinion: (opinion: string) => void;
+};
+
+const OpinionSelector = (props: SelectorProps) => {
   const listOpinions = useQuery('listOpinions') ?? [];
   useEffect(() => {
-    if (!opinion && listOpinions.length > 0) {
-      selectedOpinion(listOpinions[0].opinion);
+    if (!props.opinion && listOpinions.length > 0) {
+      props.selectedOpinion(listOpinions[0].opinion);
     }
-  }, [opinion, listOpinions, selectedOpinion]);
+  }, [props, listOpinions]);
 
   return (
     <div className={styles.description}>
     {"Select an opinion:"} 
-    <select value={opinion ?? ""} onChange={(e) => selectedOpinion(e.target.value)}>
-    {listOpinions.map((opinion, i) => <option key={i} value={opinion.opinion}>{opinion.opinion}</option>)}
+    <select value={props.opinion ?? ""} onChange={(e) => props.selectedOpinion(e.target.value)}>
+    {listOpinions.map((opinion: any, i: number) => <option key={i} value={opinion.opinion}>{opinion.opinion}</option>)}
     </select>
     </div>
     );
 };
 
-const OpinionCreator = ({createdOpinion}) => {
+interface CreatorProps {
+  createdOpinion: (opinion: string) => void;
+}
+
+const OpinionCreator = (props: CreatorProps) => {
   const createOpinion = useMutation('createOpinion');
   const [opinion, setOpinion] = useState("");
 
@@ -33,24 +42,28 @@ const OpinionCreator = ({createdOpinion}) => {
     <input type="text" value={opinion} onChange={(e) => setOpinion(e.target.value)} />
     <button onClick={() => {
       createOpinion(opinion);
-      createdOpinion(opinion);
+      props.createdOpinion(opinion);
     }}>Create</button>
     </div>
     );
 };
 
-const OpinionViewer = ({opinion}) => {
-  const opinionDoc = useQuery('getOpinion', opinion) ?? {};
+interface ViewerProps {
+  opinion: string | null;
+}
+
+const OpinionViewer = (props: ViewerProps) => {
+  const opinionDoc = useQuery('getOpinion', props.opinion) ?? {};
   const agree = useMutation('agreeWithOpinion');
   const disagree = useMutation('disagreeWithOpinion');
-  if (!opinion) {
+  if (!props.opinion) {
     return null;
   }
   let fraction = opinionDoc.allVotes ? (opinionDoc.agree/opinionDoc.allVotes) : 0.5;
   return (
     <div>
-    <h2>{opinionDoc.opinion}</h2>
-    <center><p><button onClick={() => agree(opinion)}>Agree</button><button onClick={() => disagree(opinion)}>Disagree</button></p></center>
+    <h2>{props.opinion}</h2>
+    <p><button onClick={() => agree(props.opinion)}>Agree</button><button onClick={() => disagree(props.opinion)}>Disagree</button></p>
     <div className="slidecontainer">
     <input type="range" min="0" max="100" value={100 * fraction} className="slider" id="myRange" readOnly={true} />
     </div>
@@ -59,7 +72,7 @@ const OpinionViewer = ({opinion}) => {
 }
 
 const Home: NextPage = () => {
-  const [opinion, setOpinion] = useState(null);
+  const [opinion, setOpinion] = useState<null | string>(null);
 
   return (
     <div className={styles.container}>
