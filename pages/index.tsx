@@ -67,6 +67,7 @@ const OpinionViewer = (props: ViewerProps) => {
     <div className="slidecontainer">
     <input type="range" min="0" max="100" value={100 * fraction} className="slider" id="myRange" readOnly={true} />
     </div>
+    <p>{opinionDoc.agree} agree, {opinionDoc.disagree} disagree</p>
     </div>
     );
 }
