@@ -15,5 +15,6 @@ export default mutation(
       disagree: 0,
     };
     db.insert('opinions', opinionDoc);
+
   }
 )
