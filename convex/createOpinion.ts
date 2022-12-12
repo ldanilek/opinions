@@ -3,8 +3,7 @@ import { mutation } from './_generated/server'
 export default mutation(
   async ({ db }, opinion: string) => {
     let opinionDocs = await db
-      .table('opinions').index('opinion')
-      .range((q) => q.eq('opinion', opinion))
+      .query('opinions').withIndex('opinion', (q) => q.eq('opinion', opinion))
       .collect();
     if (opinionDocs.length > 0) {
       throw Error("duplicate opinion");

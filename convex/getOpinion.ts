@@ -5,8 +5,7 @@ export default query(async ({ db }, opinion: string | null): Promise<any> => {
     return null;
   }
   let opinionDoc = await db
-      .table('opinions').index('opinion')
-      .range((q) => q.eq('opinion', opinion))
+      .query('opinions').withIndex('opinion', (q) => q.eq('opinion', opinion))
       .unique();
   return opinionDoc;
 })

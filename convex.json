@@ -1,6 +1,7 @@
 {
-  "authInfo": [],
+  "project": "opinions",
+  "team": "lee-danilek",
+  "prodUrl": "https://murky-swan-635.convex.cloud",
   "functions": "convex/",
-  "instanceName": "murky-swan-635",
-  "origin": "https://murky-swan-635.convex.cloud"
+  "authInfo": []
 }

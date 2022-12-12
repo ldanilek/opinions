@@ -6,11 +6,10 @@ export default mutation(
       return;
     }
     let opinionDoc = await db
-      .table('opinions').index('opinion')
-      .range((q) => q.eq('opinion', opinion))
+      .query('opinions').withIndex('opinion', (q) => q.eq('opinion', opinion))
       .unique();
-    opinionDoc.allVotes += 1;
-    opinionDoc.agree += 1;
-    db.replace(opinionDoc._id, opinionDoc);
+    opinionDoc!.allVotes += 1;
+    opinionDoc!.agree += 1;
+    db.replace(opinionDoc!._id, opinionDoc!);
   }
 )
