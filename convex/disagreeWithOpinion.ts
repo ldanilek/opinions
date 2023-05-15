@@ -1,7 +1,7 @@
 import { mutation } from './_generated/server'
 
 export default mutation(
-  async ({ db }, opinion: string | null) => {
+  async ({ db }, {opinion}: {opinion: string | null}) => {
     if (!opinion) {
       return;
     }

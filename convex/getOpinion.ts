@@ -1,6 +1,6 @@
 import { query } from './_generated/server'
 
-export default query(async ({ db }, opinion: string | null): Promise<any> => {
+export default query(async ({ db }, {opinion}: {opinion: string | null}): Promise<any> => {
   if (!opinion) {
     return null;
   }

@@ -1,11 +1,12 @@
-import { defineSchema, defineTable, s } from "convex/schema";
+import { defineSchema, defineTable } from "convex/schema";
+import { v } from "convex/values";
 
 export default defineSchema({
   opinions: defineTable({
-    opinion: s.string(),
-    allVotes: s.number(),
-    agree: s.number(),
-    disagree: s.number(),
+    opinion: v.string(),
+    allVotes: v.number(),
+    agree: v.number(),
+    disagree: v.number(),
   })
   .index("opinion", ["opinion"])
   .index("popularity", ["allVotes"]),

@@ -1,7 +1,7 @@
 import { mutation } from './_generated/server'
 
 export default mutation(
-  async ({ db }, opinion: string) => {
+  async ({ db }, {opinion}: {opinion: string}) => {
     let opinionDocs = await db
       .query('opinions').withIndex('opinion', (q) => q.eq('opinion', opinion))
       .collect();

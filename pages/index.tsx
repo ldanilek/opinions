@@ -41,7 +41,7 @@ const OpinionCreator = (props: CreatorProps) => {
     {"Create a new opinion:"}
     <input type="text" value={opinion} onChange={(e) => setOpinion(e.target.value)} />
     <button onClick={() => {
-      createOpinion(opinion);
+      createOpinion({opinion});
       props.createdOpinion(opinion);
     }}>Create</button>
     </div>
@@ -53,7 +53,7 @@ interface ViewerProps {
 }
 
 const OpinionViewer = (props: ViewerProps) => {
-  const opinionDoc = useQuery('getOpinion', props.opinion) ?? {};
+  const opinionDoc = useQuery('getOpinion', {opinion: props.opinion}) ?? {};
   const agree = useMutation('agreeWithOpinion');
   const disagree = useMutation('disagreeWithOpinion');
   if (!props.opinion) {
@@ -63,7 +63,7 @@ const OpinionViewer = (props: ViewerProps) => {
   return (
     <div>
     <h2>{props.opinion}</h2>
-    <p><button onClick={() => agree(props.opinion)}>Agree</button><button onClick={() => disagree(props.opinion)}>Disagree</button></p>
+    <p><button onClick={() => agree({opinion: props.opinion})}>Agree</button><button onClick={() => disagree({opinion: props.opinion})}>Disagree</button></p>
     <div className="slidecontainer">
     <input type="range" min="0" max="100" value={100 * fraction} className="slider" id="myRange" readOnly={true} />
     </div>
