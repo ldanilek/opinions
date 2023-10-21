@@ -2,8 +2,9 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { useQuery, useMutation } from '../convex/_generated/react'
-import { useCallback, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { useMutation, useQuery } from 'convex/react'
+import { api } from '../convex/_generated/api'
 
 interface SelectorProps {
   opinion: string | null;
@@ -11,7 +12,7 @@ interface SelectorProps {
 };
 
 const OpinionSelector = (props: SelectorProps) => {
-  const listOpinions = useQuery('listOpinions') ?? [];
+  const listOpinions = useQuery(api.listOpinions.default) ?? [];
   useEffect(() => {
     if (!props.opinion && listOpinions.length > 0) {
       props.selectedOpinion(listOpinions[0].opinion);
@@ -33,7 +34,7 @@ interface CreatorProps {
 }
 
 const OpinionCreator = (props: CreatorProps) => {
-  const createOpinion = useMutation('createOpinion');
+  const createOpinion = useMutation(api.createOpinion.default);
   const [opinion, setOpinion] = useState("");
 
   return (
@@ -53,9 +54,9 @@ interface ViewerProps {
 }
 
 const OpinionViewer = (props: ViewerProps) => {
-  const opinionDoc = useQuery('getOpinion', {opinion: props.opinion}) ?? {};
-  const agree = useMutation('agreeWithOpinion');
-  const disagree = useMutation('disagreeWithOpinion');
+  const opinionDoc = useQuery(api.getOpinion.default, {opinion: props.opinion}) ?? {};
+  const agree = useMutation(api.agreeWithOpinion.default);
+  const disagree = useMutation(api.disagreeWithOpinion.default);
   if (!props.opinion) {
     return null;
   }

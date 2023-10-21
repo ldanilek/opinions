@@ -19,7 +19,6 @@ import type * as createOpinion from "../createOpinion";
 import type * as disagreeWithOpinion from "../disagreeWithOpinion";
 import type * as getOpinion from "../getOpinion";
 import type * as listOpinions from "../listOpinions";
-import type * as starOpinion from "../starOpinion";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -35,7 +34,6 @@ declare const fullApi: ApiFromModules<{
   disagreeWithOpinion: typeof disagreeWithOpinion;
   getOpinion: typeof getOpinion;
   listOpinions: typeof listOpinions;
-  starOpinion: typeof starOpinion;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
