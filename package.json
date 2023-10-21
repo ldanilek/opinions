@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "concurrently": "^7.6.0",
-    "convex": "^0.14.1",
+    "convex": "^1.4.1",
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
