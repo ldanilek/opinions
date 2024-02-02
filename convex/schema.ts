@@ -8,6 +8,6 @@ export default defineSchema({
     agree: v.number(),
     disagree: v.number(),
   })
-  .index("opinion", ["opinion"])
-  .index("popularity", ["allVotes"]),
+    .index("opinion", ["opinion"])
+    .index("popularity", ["allVotes"]),
 });
